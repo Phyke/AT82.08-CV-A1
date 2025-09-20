@@ -17,3 +17,6 @@ Assignment 1 for AT82.08 Computer Vision (Aug 2025)
 - Press keys `q`, `w`, `e`, `r`, `t`, ... to switch between submodes within a mode.
 - Press `ESC` to exit the application.
 - Use trackbars to adjust parameters in applicable modes.
+
+## Total hours spent
+~4 + ~5.5 + ~7 = ~16.5 hours
