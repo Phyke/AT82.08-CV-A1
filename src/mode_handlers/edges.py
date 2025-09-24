@@ -163,7 +163,13 @@ class CannyHandler(BaseModeHandler):
         main_window_width: int,
         main_window_height: int,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window=True,
+        )
         self.canny_tracker = CannyThresholdTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:

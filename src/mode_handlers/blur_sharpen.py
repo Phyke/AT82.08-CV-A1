@@ -19,8 +19,15 @@ class AverageBlurHandler(BaseModeHandler):
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
+        have_control_window: bool = True,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernelsize_tracker = KernelSizeTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:
@@ -35,8 +42,15 @@ class GaussianBlurHandler(BaseModeHandler):
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
+        have_control_window: bool = True,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernelsize_tracker = KernelSizeTracker(control_window_name)
         self.sigma_tracker = SigmaTracker(control_window_name)
 
@@ -53,8 +67,15 @@ class GaussianBlurAutoHandler(BaseModeHandler):
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
+        have_control_window: bool = True,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.sigma_tracker = SigmaTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:
@@ -76,8 +97,15 @@ class MedianBlurHandler(BaseModeHandler):
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
+        have_control_window: bool = True,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernelsize_tracker = KernelSizeTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:
@@ -92,8 +120,15 @@ class BilateralBlurHandler(BaseModeHandler):
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
+        have_control_window: bool = True,
     ):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernelsize_tracker = KernelSizeTracker(control_window_name)
         self.bilateral_sigma_tracker = BilateralSigmaTracker(control_window_name)
 

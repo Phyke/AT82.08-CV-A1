@@ -9,7 +9,13 @@ from .trackers import HarrisParamsTracker
 class CornerDetectionHandler(BaseModeHandler):
     # For default submode
     def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window=True,
+        )
         self.tracker = HarrisParamsTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:

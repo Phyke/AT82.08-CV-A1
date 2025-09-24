@@ -1,12 +1,10 @@
 import cv2
-from cv2.typing import MatLike
 
 
-class ContrastBrightnessTracker:
+class BrightnessTracker:
     def __init__(self, window_name: str):
         self.window_name = window_name
         self.brightness = 50
-        self.contrast = 50
         cv2.createTrackbar(
             "Brightness",
             self.window_name,
@@ -14,6 +12,18 @@ class ContrastBrightnessTracker:
             100,
             self.on_brightness_change,
         )
+
+    def on_brightness_change(self, value: int):
+        self.brightness = value
+
+    def get_brightness(self) -> int:
+        return self.brightness
+
+
+class ContrastTracker:
+    def __init__(self, window_name: str):
+        self.window_name = window_name
+        self.contrast = 50
         cv2.createTrackbar(
             "Contrast",
             self.window_name,
@@ -22,15 +32,11 @@ class ContrastBrightnessTracker:
             self.on_contrast_change,
         )
 
-    def on_brightness_change(self, value: int):
-        self.brightness = value
-
     def on_contrast_change(self, value: int):
         self.contrast = value
 
-    def apply(self, frame: MatLike) -> MatLike:
-        adjusted_frame = cv2.convertScaleAbs(frame, alpha=self.contrast / 50, beta=self.brightness - 50)
-        return adjusted_frame
+    def get_contrast(self) -> int:
+        return self.contrast
 
 
 class KernelSizeTracker:
@@ -359,3 +365,65 @@ class HoughCirclesParamsTracker:
 
     def on_max_radius_change(self, value: int):
         self.max_radius = max(0, value)
+
+
+class TranslateTracker:
+    def __init__(self, window_name: str):
+        self.window_name = window_name
+        self.translate_x = 0
+        self.translate_y = 0
+        self.rotate_angle = 0
+        self.scale_factor = 100  # 100 = 1.0x scale
+
+        cv2.createTrackbar(
+            "Translate X (-200 to 200)",
+            self.window_name,
+            200,  # Center position (0 offset)
+            400,
+            self.on_translate_x_change,
+        )
+        cv2.createTrackbar(
+            "Translate Y (-200 to 200)",
+            self.window_name,
+            200,  # Center position (0 offset)
+            400,
+            self.on_translate_y_change,
+        )
+        cv2.createTrackbar(
+            "Rotate Angle (0-360)",
+            self.window_name,
+            self.rotate_angle,
+            360,
+            self.on_rotate_change,
+        )
+        cv2.createTrackbar(
+            "Scale (50-200%)",
+            self.window_name,
+            self.scale_factor,
+            200,
+            self.on_scale_change,
+        )
+
+    def on_translate_x_change(self, value: int):
+        self.translate_x = value - 200  # Convert to -200 to 200 range
+
+    def on_translate_y_change(self, value: int):
+        self.translate_y = value - 200  # Convert to -200 to 200 range
+
+    def on_rotate_change(self, value: int):
+        self.rotate_angle = value
+
+    def on_scale_change(self, value: int):
+        self.scale_factor = max(50, value)
+
+    def get_translate_x(self) -> int:
+        return self.translate_x
+
+    def get_translate_y(self) -> int:
+        return self.translate_y
+
+    def get_rotate_angle(self) -> int:
+        return self.rotate_angle
+
+    def get_scale_factor(self) -> float:
+        return self.scale_factor / 100.0

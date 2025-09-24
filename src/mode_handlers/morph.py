@@ -17,8 +17,21 @@ def binarize(frame: MatLike, intensity_threshold: int) -> MatLike:
 
 
 class MorphologicalHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:
@@ -28,8 +41,21 @@ class MorphologicalHandler(BaseModeHandler):
 
 
 class ErosionHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -43,8 +69,21 @@ class ErosionHandler(BaseModeHandler):
 
 
 class DilationHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -58,8 +97,21 @@ class DilationHandler(BaseModeHandler):
 
 
 class OpeningHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -73,8 +125,21 @@ class OpeningHandler(BaseModeHandler):
 
 
 class ClosingHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -88,8 +153,21 @@ class ClosingHandler(BaseModeHandler):
 
 
 class MorphologicalGradientHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -103,8 +181,21 @@ class MorphologicalGradientHandler(BaseModeHandler):
 
 
 class TopHatHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 
@@ -118,8 +209,21 @@ class TopHatHandler(BaseModeHandler):
 
 
 class BlackHatHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.kernel_tracker = KernelSize3579Tracker(control_window_name)
         self.threshold_tracker = IntensityThresholdTracker(control_window_name)
 

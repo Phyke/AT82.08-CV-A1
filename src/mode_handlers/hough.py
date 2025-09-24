@@ -7,8 +7,21 @@ from .trackers import CannyThresholdTracker, HoughCirclesParamsTracker, HoughLin
 
 
 class HoughLinesHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.canny_tracker = CannyThresholdTracker(control_window_name)
         self.hough_tracker = HoughLinesParamsTracker(control_window_name)
 
@@ -34,8 +47,21 @@ class HoughLinesHandler(BaseModeHandler):
 
 
 class HoughCirclesHandler(BaseModeHandler):
-    def setup_window(self, main_window_name, control_window_name, main_window_width, main_window_height):
-        super().setup_window(main_window_name, control_window_name, main_window_width, main_window_height)
+    def setup_window(
+        self,
+        main_window_name,
+        control_window_name,
+        main_window_width,
+        main_window_height,
+        have_control_window=True,
+    ):
+        super().setup_window(
+            main_window_name,
+            control_window_name,
+            main_window_width,
+            main_window_height,
+            have_control_window,
+        )
         self.hough_tracker = HoughCirclesParamsTracker(control_window_name)
 
     def process_frame(self, frame: MatLike) -> MatLike:

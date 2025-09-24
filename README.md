@@ -19,4 +19,4 @@ Assignment 1 for AT82.08 Computer Vision (Aug 2025)
 - Use trackbars to adjust parameters in applicable modes.
 
 ## Total hours spent
-~4 + ~5.5 + ~7 = ~16.5 hours
+~2 + ~4 + ~5.5 + ~7 + ~5 = ~23.5 hours

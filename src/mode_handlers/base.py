@@ -9,7 +9,7 @@ class BaseModeHandler:
         control_window_name: str,
         main_window_width: int,
         main_window_height: int,
-        have_control_window: bool = True,
+        have_control_window: bool = False,
     ):
         """Set up the window and any trackbars needed for this mode."""
         cv2.destroyAllWindows()

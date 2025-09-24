@@ -1,3 +1,4 @@
+from mode_handlers.ar import ARHandler
 from mode_handlers.blur_sharpen import (
     AverageBlurHandler,
     BilateralBlurHandler,
@@ -6,17 +7,19 @@ from mode_handlers.blur_sharpen import (
     MedianBlurHandler,
     SharpenHandler,
 )
+from mode_handlers.camera_calibration import CameraCalibrationHandler
 from mode_handlers.color_channels import (
     BlueChannelHandler,
-    ColorChannelsHandler,
     GrayScaleHandler,
     GreenChannelHandler,
+    HSVHandler,
     RedChannelHandler,
+    RGBHandler,
 )
+from mode_handlers.contrast_brightness import ContrastBrightnessHistogramHandler
 from mode_handlers.corner import CornerDetectionHandler
 from mode_handlers.edges import (
     CannyHandler,
-    EdgeDetectionHandler,
     LaplacianHandler,
     PrewittXHandler,
     PrewittXYHandler,
@@ -35,7 +38,6 @@ from mode_handlers.morph import (
     DilationHandler,
     ErosionHandler,
     MorphologicalGradientHandler,
-    MorphologicalHandler,
     OpeningHandler,
     TopHatHandler,
 )
@@ -46,47 +48,35 @@ from mode_handlers.transformation import (
     NegativeHandler,
     PowerLawHandler,
     ThresholdingHandler,
-    TransformationHandler,
 )
-
-keys2modes = {
-    "1": "Default",
-    "2": "Color Channels",
-    "3": "Transformations",
-    "4": "Blur and Sharpen",
-    "5": "Edge Detection",
-    "6": "Morphological Operations",
-    "7": "Corner Detection and Hough Transform",
-    "8": "SIFT and image stitching",
-    "9": "Camera Calibration",
-}
-
-modes2keys = {v.lower(): k for k, v in keys2modes.items()}
+from mode_handlers.translate_rotate_scale import TranslateHandler
 
 mode_map = {
     "1": {
-        "name": "Default",
-        "submodes": {},
+        "name": "Color Channel",
+        "submodes": {
+            "q": {"name": "RGB", "handler": RGBHandler},
+            "w": {"name": "Gray scale", "handler": GrayScaleHandler},
+            "e": {"name": "HSV", "handler": HSVHandler},
+            "r": {"name": "Red Channel", "handler": RedChannelHandler},
+            "t": {"name": "Green Channel", "handler": GreenChannelHandler},
+            "y": {"name": "Blue Channel", "handler": BlueChannelHandler},
+        },
     },
     "2": {
-        "name": "Color Channels",
+        "name": "Contrast & Brightness & Histogram",
         "submodes": {
-            "q": {"name": "Default", "handler": ColorChannelsHandler},
-            "w": {"name": "Red channel", "handler": RedChannelHandler},
-            "e": {"name": "Green channel", "handler": GreenChannelHandler},
-            "r": {"name": "Blue channel", "handler": BlueChannelHandler},
-            "t": {"name": "Gray scale", "handler": GrayScaleHandler},
+            "q": {"name": "Default", "handler": ContrastBrightnessHistogramHandler},
         },
     },
     "3": {
         "name": "Transformations",
         "submodes": {
-            "q": {"name": "Default", "handler": TransformationHandler},
-            "w": {"name": "Logarithmic", "handler": LogarithmicHandler},
-            "e": {"name": "Exponential", "handler": ExponentialHandler},
-            "r": {"name": "Power-law", "handler": PowerLawHandler},
-            "t": {"name": "Thresholding", "handler": ThresholdingHandler},
-            "y": {"name": "Negative", "handler": NegativeHandler},
+            "q": {"name": "Logarithmic", "handler": LogarithmicHandler},
+            "w": {"name": "Exponential", "handler": ExponentialHandler},
+            "e": {"name": "Power-law", "handler": PowerLawHandler},
+            "r": {"name": "Thresholding", "handler": ThresholdingHandler},
+            "t": {"name": "Negative", "handler": NegativeHandler},
         },
     },
     "4": {
@@ -103,7 +93,7 @@ mode_map = {
     "5": {
         "name": "Edge Detection",
         "submodes": {
-            "q": {"name": "Default", "handler": EdgeDetectionHandler},
+            "q": {"name": "Canny", "handler": CannyHandler},
             "a": {"name": "Robert X", "handler": RobertsXCrossHandler},
             "s": {"name": "Robert Y", "handler": RobertsYCrossHandler},
             "d": {"name": "Robert XY", "handler": RobertsXYCrossHandler},
@@ -114,20 +104,18 @@ mode_map = {
             "e": {"name": "Sobel Y", "handler": SobelYHandler},
             "r": {"name": "Sobel XY", "handler": SobelHandler},
             "t": {"name": "Laplacian", "handler": LaplacianHandler},
-            "y": {"name": "Canny", "handler": CannyHandler},
         },
     },
     "6": {
         "name": "Morphological Operations",
         "submodes": {
-            "q": {"name": "Default", "handler": MorphologicalHandler},
-            "w": {"name": "Erosion", "handler": ErosionHandler},
-            "e": {"name": "Dilation", "handler": DilationHandler},
-            "r": {"name": "Opening", "handler": OpeningHandler},
-            "t": {"name": "Closing", "handler": ClosingHandler},
-            "y": {"name": "Morphological Gradient", "handler": MorphologicalGradientHandler},
-            "u": {"name": "Top Hat", "handler": TopHatHandler},
-            "i": {"name": "Black Hat", "handler": BlackHatHandler},
+            "q": {"name": "Erosion", "handler": ErosionHandler},
+            "w": {"name": "Dilation", "handler": DilationHandler},
+            "e": {"name": "Opening", "handler": OpeningHandler},
+            "r": {"name": "Closing", "handler": ClosingHandler},
+            "t": {"name": "Morphological Gradient", "handler": MorphologicalGradientHandler},
+            "y": {"name": "Top Hat", "handler": TopHatHandler},
+            "u": {"name": "Black Hat", "handler": BlackHatHandler},
         },
     },
     "7": {
@@ -138,14 +126,32 @@ mode_map = {
             "e": {"name": "Hough Circles", "handler": HoughCirclesHandler},
         },
     },
-    "8": {  # Panorama
-        "name": "SIFT and image stitching",
+    "8": {
+        "name": "Transform Image",
+        "submodes": {
+            "q": {"name": "Translate/Rotate/Scale", "handler": TranslateHandler},
+        },
+    },
+    "9": {
+        "name": "Panorama",
         "submodes": {
             "q": {"name": "Panorama", "handler": PanoramaHandler},
         },
     },
-    "9": {  # T-Rex 3D
+    "0": {
         "name": "Camera Calibration",
-        "submodes": {},
+        "submodes": {
+            "q": {"name": "Default", "handler": CameraCalibrationHandler},
+        },
+    },
+    "-": {
+        "name": "AR",
+        "submodes": {
+            "q": {"name": "Default", "handler": ARHandler},
+        },
     },
 }
+
+keys2modes = {k: v["name"].lower() for k, v in mode_map.items()}
+
+modes2keys = {v.lower(): k for k, v in keys2modes.items()}

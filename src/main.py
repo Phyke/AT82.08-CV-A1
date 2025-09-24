@@ -21,8 +21,9 @@ scaled_height = cam_width
 cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("frame", cam_width, cam_height)
 
-mode = "Default"
-submode = "Default"
+# Start with Color Channel mode (mode "1")
+mode = "Color Channel"
+submode = "RGB"
 last_key = -1
 current_handler: BaseModeHandler = None  # Track the current submode handler
 
@@ -36,7 +37,7 @@ def recreate_window_default():
 def get_submode_info(mode_key, submode_key):
     mode_info = mode_map[mode_key]
     submode_map = mode_info.get("submodes", {})
-    return submode_map.get(submode_key, {"name": "Default", "handler": None})
+    return submode_map.get(submode_key, {"name": "RGB", "handler": None})
 
 
 def handle_key_mode(frame=None):
@@ -68,7 +69,7 @@ def handle_key_mode(frame=None):
             mode = mode_info["name"]
             # Get the first submode name for this mode
             submodes = mode_map[mode_key].get("submodes", {})
-            submode = next(iter(submodes.values()))["name"] if submodes else "Default"
+            submode = next(iter(submodes.values()))["name"] if submodes else "RGB"
 
             # Instantiate handler for default submode
             submode_info = get_submode_info(mode_key, "q")
@@ -81,7 +82,8 @@ def handle_key_mode(frame=None):
                 recreate_window_default()
             print(f"Switched to mode: {mode}")
 
-        elif mode != "Default":
+        # Allow submode switching for all modes with submodes
+        else:
             current_mode_key = modes2keys[mode.lower()]
             submodes = mode_map[current_mode_key]["submodes"]
             if chr(last_key) in submodes:
@@ -101,9 +103,7 @@ def handle_key_mode(frame=None):
 
 def handle_mode(frame: MatLike):
     global current_handler, submode
-    if mode == "Default":
-        display_frame = frame
-    elif current_handler:
+    if current_handler:
         display_frame = current_handler.process_frame(frame)
     else:
         display_frame = frame
@@ -117,7 +117,7 @@ def put_display_text(frame: MatLike):
         text=f"Mode: {mode}",
         org=(10, 30),  # Top-left corner
         fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=1,
+        fontScale=0.7,
         color=255,
         thickness=2,
         lineType=cv2.LINE_AA,
@@ -127,7 +127,7 @@ def put_display_text(frame: MatLike):
         text=f"Submode: {submode}",
         org=(10, 60),  # Below the mode text
         fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=0.7,
+        fontScale=0.5,
         color=255,
         thickness=1,
         lineType=cv2.LINE_AA,
@@ -151,4 +151,5 @@ while True:
     cv2.imshow("frame", display_frame)
 
 cap.release()
+cv2.destroyAllWindows()
 cv2.destroyAllWindows()
