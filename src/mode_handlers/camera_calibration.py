@@ -102,9 +102,24 @@ class CameraCalibrationHandler(BaseModeHandler):
                     self.images_captured += 1
                     self.last_capture_time = time.time()
 
-            # Display status on the frame
+            # Display status on the frame (bottom left with background)
             text = f"Images captured: {self.images_captured}/{TARGET_IMAGES}"
-            cv2.putText(display_frame, text, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            font_face = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 1
+            thickness = 2
+            color_fg = (0, 0, 255)  # red text
+            color_bg = (255, 255, 255)  # white background
+            pad_x, pad_y = 10, 6
+            (text_w, text_h), baseline = cv2.getTextSize(text, font_face, font_scale, thickness)
+            frame_h, frame_w = display_frame.shape[:2]
+            x = 10
+            y = frame_h - 20
+            # Draw background rectangle
+            cv2.rectangle(
+                display_frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
+            )
+            # Draw text
+            cv2.putText(display_frame, text, (x, y), font_face, font_scale, color_fg, thickness)
 
             return display_frame
         else:

@@ -217,7 +217,7 @@ class HarrisParamsTracker:
             self.on_sobel_ksize_change,
         )
         cv2.createTrackbar(
-            "Dilate Kernel Size (fixed 5)",
+            "Dilate Kernel Size (3,5,7,9)",
             self.window_name,
             0,
             3,
@@ -282,7 +282,7 @@ class HoughLinesParamsTracker:
         self.window_name = window_name
         self.hough_threshold = 100
         cv2.createTrackbar(
-            "Threshold (1-200)",
+            "Threshold (1-500)",
             self.window_name,
             self.hough_threshold,
             500,

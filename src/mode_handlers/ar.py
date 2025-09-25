@@ -59,6 +59,7 @@ class ARHandler(BaseModeHandler):
         corners, ids, _ = self.aruco_detector.detectMarkers(gray)
 
         if ids is not None:
+            self.no_marker = False
             rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.05, camera_matrix, self.dist)
 
             # Project all vertices at once
@@ -75,62 +76,81 @@ class ARHandler(BaseModeHandler):
             print(f"Drew {len(self.trex_faces)} faces of the T-Rex model.")
         else:
             # print("No ArUco markers detected.")
-            cv2.putText(frame, "No ArUco markers detected", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            self.no_marker = True
 
         frame = cv2.flip(frame, 1)  # Flip once at end
+        if self.no_marker:
+            # Draw text at bottom left with background
+            text = "No ArUco markers detected"
+            font_face = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 1
+            thickness = 2
+            color_fg = (0, 0, 255)  # red text
+            color_bg = (255, 255, 255)  # white background
+            pad_x, pad_y = 10, 6
+            (text_w, text_h), baseline = cv2.getTextSize(text, font_face, font_scale, thickness)
+            frame_h, frame_w = frame.shape[:2]
+            x = 20
+            y = frame_h - 20
+            # Draw background rectangle
+            cv2.rectangle(
+                frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
+            )
+            # Draw text
+            cv2.putText(frame, text, (x, y), font_face, font_scale, color_fg, thickness)
         return frame
 
-    def _draw_ar_cube(self, frame, camera_matrix):
-        # --- AR & Pinhole Implementations---
-        # frame = cv2.flip(frame, 1)  # This cause a bug for some reason
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        corners, ids, _ = self.aruco_detector.detectMarkers(gray)
-        if ids is not None:
-            print(f"Detected ArUco markers: {ids.flatten()}")
-            rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.05, camera_matrix, self.dist)
-            axis_len = 0.05
-            obj_pts = np.float32(
-                [
-                    [0, 0, 0],
-                    [axis_len, 0, 0],
-                    [axis_len, axis_len, 0],
-                    [0, axis_len, 0],
-                    [0, 0, -axis_len],
-                    [axis_len, 0, -axis_len],
-                    [axis_len, axis_len, -axis_len],
-                    [0, axis_len, -axis_len],
-                ]
-            )
-            img_pts, _ = cv2.projectPoints(obj_pts, rvecs[0], tvecs[0], camera_matrix, self.dist)
-            img_pts = np.int32(img_pts).reshape(-1, 2)
-            # Define cube faces by indices
-            faces = [
-                [0, 1, 2, 3],  # bottom
-                [4, 5, 6, 7],  # top
-                [0, 1, 5, 4],  # side 1
-                [1, 2, 6, 5],  # side 2
-                [2, 3, 7, 6],  # side 3
-                [3, 0, 4, 7],  # side 4
-            ]
-            face_colors = [
-                (255, 0, 0),  # Blue
-                (0, 255, 0),  # Green
-                (0, 0, 255),  # Red
-                (255, 255, 0),  # Cyan
-                (255, 0, 255),  # Magenta
-                (0, 255, 255),  # Yellow
-            ]
-            # Draw filled faces
-            for idx, face in enumerate(faces):
-                cv2.fillConvexPoly(frame, img_pts[face], face_colors[idx], lineType=cv2.LINE_AA)
-            # Draw black wireframe
-            for face in faces:
-                cv2.polylines(frame, [img_pts[face]], isClosed=True, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
-        else:
-            print("No ArUco markers detected.")
-            cv2.putText(frame, "No ArUco markers detected", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        frame = cv2.flip(frame, 1)  # Flip only once at the end for display
-        return frame
+    # def _draw_ar_cube(self, frame, camera_matrix):
+    #     # --- AR & Pinhole Implementations---
+    #     # frame = cv2.flip(frame, 1)  # This cause a bug for some reason
+    #     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #     corners, ids, _ = self.aruco_detector.detectMarkers(gray)
+    #     if ids is not None:
+    #         print(f"Detected ArUco markers: {ids.flatten()}")
+    #         rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.05, camera_matrix, self.dist)
+    #         axis_len = 0.05
+    #         obj_pts = np.float32(
+    #             [
+    #                 [0, 0, 0],
+    #                 [axis_len, 0, 0],
+    #                 [axis_len, axis_len, 0],
+    #                 [0, axis_len, 0],
+    #                 [0, 0, -axis_len],
+    #                 [axis_len, 0, -axis_len],
+    #                 [axis_len, axis_len, -axis_len],
+    #                 [0, axis_len, -axis_len],
+    #             ]
+    #         )
+    #         img_pts, _ = cv2.projectPoints(obj_pts, rvecs[0], tvecs[0], camera_matrix, self.dist)
+    #         img_pts = np.int32(img_pts).reshape(-1, 2)
+    #         # Define cube faces by indices
+    #         faces = [
+    #             [0, 1, 2, 3],  # bottom
+    #             [4, 5, 6, 7],  # top
+    #             [0, 1, 5, 4],  # side 1
+    #             [1, 2, 6, 5],  # side 2
+    #             [2, 3, 7, 6],  # side 3
+    #             [3, 0, 4, 7],  # side 4
+    #         ]
+    #         face_colors = [
+    #             (255, 0, 0),  # Blue
+    #             (0, 255, 0),  # Green
+    #             (0, 0, 255),  # Red
+    #             (255, 255, 0),  # Cyan
+    #             (255, 0, 255),  # Magenta
+    #             (0, 255, 255),  # Yellow
+    #         ]
+    #         # Draw filled faces
+    #         for idx, face in enumerate(faces):
+    #             cv2.fillConvexPoly(frame, img_pts[face], face_colors[idx], lineType=cv2.LINE_AA)
+    #         # Draw black wireframe
+    #         for face in faces:
+    #             cv2.polylines(frame, [img_pts[face]], isClosed=True, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+    #     else:
+    #         print("No ArUco markers detected.")
+    #         cv2.putText(frame, "No ArUco markers detected", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    #     frame = cv2.flip(frame, 1)  # Flip only once at the end for display
+    #     return frame
 
     def _draw_ar_mode(self, frame):
         return self._draw_trex(frame, self.mtx)

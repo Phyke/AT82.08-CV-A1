@@ -66,7 +66,7 @@ mode_map = {
     "2": {
         "name": "Contrast & Brightness & Histogram",
         "submodes": {
-            "q": {"name": "Default", "handler": ContrastBrightnessHistogramHandler},
+            "q": {"name": "Main", "handler": ContrastBrightnessHistogramHandler},
         },
     },
     "3": {
@@ -141,13 +141,13 @@ mode_map = {
     "0": {
         "name": "Camera Calibration",
         "submodes": {
-            "q": {"name": "Default", "handler": CameraCalibrationHandler},
+            "q": {"name": "Camera Calibration", "handler": CameraCalibrationHandler},
         },
     },
     "-": {
         "name": "AR",
         "submodes": {
-            "q": {"name": "Default", "handler": ARHandler},
+            "q": {"name": "AR", "handler": ARHandler},
         },
     },
 }

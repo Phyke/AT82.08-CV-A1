@@ -112,26 +112,108 @@ def handle_mode(frame: MatLike):
 
 
 def put_display_text(frame: MatLike):
-    cv2.putText(
-        img=frame,
-        text=f"Mode: {mode}",
-        org=(10, 30),  # Top-left corner
-        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=0.7,
-        color=255,
-        thickness=2,
-        lineType=cv2.LINE_AA,
+    # Common style
+    color_fg = (0, 0, 0)  # black text
+    color_bg = (255, 255, 255)  # white background
+    pad_x, pad_y = 5, 3
+    font_face = cv2.FONT_HERSHEY_SIMPLEX
+
+    # Mode text
+    mode_text = f"Mode: {mode}"
+    mode_font_scale = 0.7
+    mode_thickness = 2
+    (mode_w, mode_h), mode_baseline = cv2.getTextSize(mode_text, font_face, mode_font_scale, mode_thickness)
+    mode_x, mode_y = 10, 30
+    cv2.rectangle(
+        frame,
+        (mode_x - pad_x, mode_y - mode_h - pad_y),
+        (mode_x + mode_w + pad_x, mode_y + mode_baseline + pad_y),
+        color_bg,
+        -1,
     )
     cv2.putText(
         img=frame,
-        text=f"Submode: {submode}",
-        org=(10, 60),  # Below the mode text
-        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=0.5,
-        color=255,
-        thickness=1,
+        text=mode_text,
+        org=(mode_x, mode_y),
+        fontFace=font_face,
+        fontScale=mode_font_scale,
+        color=color_fg,
+        thickness=mode_thickness,
         lineType=cv2.LINE_AA,
     )
+
+    # Submode text
+    submode_text = f"Submode: {submode}"
+    submode_font_scale = 0.5
+    submode_thickness = 1
+    (submode_w, submode_h), submode_baseline = cv2.getTextSize(
+        submode_text, font_face, submode_font_scale, submode_thickness
+    )
+    submode_x, submode_y = 10, 60
+    cv2.rectangle(
+        frame,
+        (submode_x - pad_x, submode_y - submode_h - pad_y),
+        (submode_x + submode_w + pad_x, submode_y + submode_baseline + pad_y),
+        color_bg,
+        -1,
+    )
+    cv2.putText(
+        img=frame,
+        text=submode_text,
+        org=(submode_x, submode_y),
+        fontFace=font_face,
+        fontScale=submode_font_scale,
+        color=color_fg,
+        thickness=submode_thickness,
+        lineType=cv2.LINE_AA,
+    )
+
+    # Show control hints for submodes in the current mode
+    mode_key = modes2keys.get(mode.lower())
+    submodes = mode_map.get(mode_key, {}).get("submodes", {})
+    hints = [f"{k}: {v['name']}" for k, v in submodes.items()]
+    hint_font_scale = 0.45
+    hint_thickness = 1
+
+    if mode.lower() == "camera calibration":
+        # Draw at lower left corner
+        frame_h, frame_w = frame.shape[:2]
+        for i, hint in enumerate(hints):
+            (text_w, text_h), baseline = cv2.getTextSize(hint, font_face, hint_font_scale, hint_thickness)
+            x = 10
+            y = frame_h - 10 - (len(hints) - 1 - i) * (text_h + 8)
+            cv2.rectangle(
+                frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
+            )
+            cv2.putText(
+                img=frame,
+                text=hint,
+                org=(x, y),
+                fontFace=font_face,
+                fontScale=hint_font_scale,
+                color=color_fg,
+                thickness=hint_thickness,
+                lineType=cv2.LINE_AA,
+            )
+    else:
+        # Default: draw at top left below mode/submode
+        start_y = 90
+        for i, hint in enumerate(hints):
+            (text_w, text_h), baseline = cv2.getTextSize(hint, font_face, hint_font_scale, hint_thickness)
+            x, y = 10, start_y + i * (text_h + 8)
+            cv2.rectangle(
+                frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
+            )
+            cv2.putText(
+                img=frame,
+                text=hint,
+                org=(x, y),
+                fontFace=font_face,
+                fontScale=hint_font_scale,
+                color=color_fg,
+                thickness=hint_thickness,
+                lineType=cv2.LINE_AA,
+            )
     return frame
 
 
