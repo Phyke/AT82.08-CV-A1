@@ -8,7 +8,7 @@ git clone https://github.com/Phyke/AT82.08-CV-A1.git
 cd AT82.08-CV-A1
 uv sync
 cd src
-python main.py
+python app.py
 ```
 
 # Application Modes & Usage Instructions
