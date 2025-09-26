@@ -175,45 +175,21 @@ def put_display_text(frame: MatLike):
     hint_font_scale = 0.45
     hint_thickness = 1
 
-    if mode.lower() == "camera calibration":
-        # Draw at lower left corner
-        frame_h, frame_w = frame.shape[:2]
-        for i, hint in enumerate(hints):
-            (text_w, text_h), baseline = cv2.getTextSize(hint, font_face, hint_font_scale, hint_thickness)
-            x = 10
-            y = frame_h - 10 - (len(hints) - 1 - i) * (text_h + 8)
-            cv2.rectangle(
-                frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
-            )
-            cv2.putText(
-                img=frame,
-                text=hint,
-                org=(x, y),
-                fontFace=font_face,
-                fontScale=hint_font_scale,
-                color=color_fg,
-                thickness=hint_thickness,
-                lineType=cv2.LINE_AA,
-            )
-    else:
-        # Default: draw at top left below mode/submode
-        start_y = 90
-        for i, hint in enumerate(hints):
-            (text_w, text_h), baseline = cv2.getTextSize(hint, font_face, hint_font_scale, hint_thickness)
-            x, y = 10, start_y + i * (text_h + 8)
-            cv2.rectangle(
-                frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1
-            )
-            cv2.putText(
-                img=frame,
-                text=hint,
-                org=(x, y),
-                fontFace=font_face,
-                fontScale=hint_font_scale,
-                color=color_fg,
-                thickness=hint_thickness,
-                lineType=cv2.LINE_AA,
-            )
+    start_y = 90
+    for i, hint in enumerate(hints):
+        (text_w, text_h), baseline = cv2.getTextSize(hint, font_face, hint_font_scale, hint_thickness)
+        x, y = 10, start_y + i * (text_h + 8)
+        cv2.rectangle(frame, (x - pad_x, y - text_h - pad_y), (x + text_w + pad_x, y + baseline + pad_y), color_bg, -1)
+        cv2.putText(
+            img=frame,
+            text=hint,
+            org=(x, y),
+            fontFace=font_face,
+            fontScale=hint_font_scale,
+            color=color_fg,
+            thickness=hint_thickness,
+            lineType=cv2.LINE_AA,
+        )
     return frame
 
 
